@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <meta charset="UTF-8">
+  <meta name="description" content="Best viewed at 1024x768">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #050505; /* DARKER BACKGROUND */
+    }
+
+    #dvd-container {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #0b0b0b, #000);
+      z-index: 1;
+    }
+
+    #dvd-logo {
+      position: absolute;
+      width: 160px;
+      image-rendering: pixelated;
+      filter: hue-rotate(0deg);
+      transition: filter 0.1s linear;
+    }
+
+    /* NAV OVERLAY */
+    #overlay {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+      text-align: center;
+      background: rgba(0,0,0,0.75);
+      padding: 10px;
+      border-bottom: 2px solid #ff00ff;
+      font-family: Comic Sans MS, Verdana;
+    }
+
+    #overlay a {
+      margin: 0 10px;
+      color: #00ffff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #overlay a:hover {
+      background: yellow;
+      color: black;
+    }
+
+    /* CORNER HIT MESSAGE */
+    #corner-hit {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: lime;
+      font-family: "Comic Sans MS", Arial;
+      font-size: 28px;
+      text-shadow: 2px 2px 8px black;
+      display: none;
+      z-index: 20;
+      animation: pop 0.6s ease-out;
+    }
+
+    @keyframes pop {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    }
+
+    #footer {
+      position: fixed;
+      bottom: 6px;
+      width: 100%;
+      text-align: center;
+      font-size: 11px;
+      color: #555;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div id="overlay">
+  <a href="index.html">Home</a> |
+  <a href="about.html">About</a> |
+  <a href="photos.html">Photos</a> |
+  <a href="links.html">Links</a> |
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- DVD -->
+<div id="dvd-container">
+  <img src="dvd.png" id="dvd-logo" alt="DVD Logo">
+</div>
+
+<!-- PERFECT CORNER MESSAGE -->
+<div id="corner-hit">WOAH PERFECT CORNER HIT</div>
+
+<div id="footer">
+  best viewed at 1024x768 · © 2001–2026
+</div>
+
+<script>
+  const dvd = document.getElementById("dvd-logo");
+  const container = document.getElementById("dvd-container");
+  const message = document.getElementById("corner-hit");
+
+  let x = 100;
+  let y = 100;
+  let dx = 2;
+  let dy = 2;
+
+  function randomHue() {
+    return Math.floor(Math.random() * 360);
+  }
+
+  function showCornerHit() {
+    message.style.display = "block";
+    message.style.animation = "none";
+    message.offsetHeight; // reset animation
+    message.style.animation = "pop 0.6s ease-out";
+    setTimeout(() => {
+      message.style.display = "none";
+    }, 600);
+  }
+
+  function animate() {
+    const maxX = container.clientWidth - dvd.offsetWidth;
+    const maxY = container.clientHeight - dvd.offsetHeight;
+
+    x += dx;
+    y += dy;
+
+    let hitX = false;
+    let hitY = false;
+
+    if (x <= 0 || x >= maxX) {
+      dx *= -1;
+      hitX = true;
+      dvd.style.filter = `hue-rotate(${randomHue()}deg)`;
+    }
+
+    if (y <= 0 || y >= maxY) {
+      dy *= -1;
+      hitY = true;
+      dvd.style.filter = `hue-rotate(${randomHue()}deg)`;
+    }
+
+    /* PERFECT CORNER HIT */
+    if (hitX && hitY) {
+      showCornerHit();
+    }
+
+    dvd.style.left = x + "px";
+    dvd.style.top = y + "px";
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
